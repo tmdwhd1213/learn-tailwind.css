@@ -1,0 +1,11 @@
+tailwind intelisense -> 확장프로그램 설치(자동완성)
+modifier -> 
+peer modifier -> input의 상태에 따라서 span의 스타일을 변화시킬 수 있다.
+
+HTML - <detail> -> 아코디언 기능 만들 수 있음.
+  <summary>What is my fav. food</summary>
+  <div>김치</div>
+</detail>
+
+보통 디자인을 할 때 Desktop -> 모바일로 하는데, tailwind는 디폴트로 모바일 -> Desktop으로 하게끔 디자인 방식을 바꿔버렸다.
+modifier - bg-white-400 sm:bg-gray-400 md:bg-yellow-400 lg:bg-red-400 ... 이 modifier는 from의 개념으로 생각하면 됨. 
