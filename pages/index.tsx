@@ -41,7 +41,8 @@ const Home: NextPage = () => {
         </button>
       </div>
       <div className="bg-white overflow-hidden rounded-3xl shadow-xl group">
-        <div className="bg-blue-500 p-6 pb-14 xl:pb-52">
+        {/* 핸드폰 가로:landscape 세로: portrait */}
+        <div className="portrait:bg-indigo-600 landscape:bg-teal-300 p-6 pb-14 xl:pb-40">
           <span className="text-white text-2xl">Profile</span>
         </div>
         <div className="rounded-3xl p-6 bg-white relative -top-5">
