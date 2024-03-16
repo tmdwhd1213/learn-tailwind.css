@@ -11,3 +11,9 @@ HTML - <detail> -> 아코디언 기능 만들 수 있음.
 modifier - bg-white-400 sm:bg-gray-400 md:bg-yellow-400 lg:bg-red-400 ... 이 modifier는 from의 개념으로 생각하면 됨. 
 
 다크모드를 지원할 경우 -> tailwind.config.js의 darkMode의 디폴트(사용저 브라우저 환경에 맡김)는 media, 수동으로 하겠다-> class(변경하고자 하는 곳의 부모의 className에 dark를 삽입.)
+
+tailwind 3.0 이전 -> 겁나 큰 파일
+이후 -> Just In Time 컴파일러 (실시간으로 코드를 감시하면서 그때그때 필요한 클래스를 생성.)
+text-[93432px] (만약 tailwind에 원하는 사이즈가 없다? 대괄호로 변수처럼 사용) 3.0이전에는 style={{}}을 따로 만들어서 정의했음.
+
+배경화면 쓸 때, bg-[url('/vercel.svg')] 이런 식으로 가능

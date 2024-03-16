@@ -30,8 +30,8 @@ const Home: NextPage = () => {
           ))}
         </ul>
         <div className="flex justify-between mt-2 pt-2 border-t-2 border-dashed">
-          <span>Total</span>
-          <span className="font-semibold">$99</span>
+          <span className="text-[tomato]">Total</span>
+          <span className="font-semibold text-[tomato]">$99</span>
         </div>
         <button
           className="mt-5 bg-blue-500 text-white p-3 text-center rounded-xl w-3/4 mx-auto 
@@ -152,6 +152,9 @@ const Home: NextPage = () => {
             Lorem ipsum, dolor sit amet consectetur adipisicing elit.
           </p>
         </div>
+      </div>
+      <div className="bg-white p-10 rounded-3xl shadow-xl">
+        <div className="bg-[url('../public/vercel.svg')]"></div>
       </div>
     </div>
   );
