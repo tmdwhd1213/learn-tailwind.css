@@ -9,3 +9,5 @@ HTML - <detail> -> 아코디언 기능 만들 수 있음.
 
 보통 디자인을 할 때 Desktop -> 모바일로 하는데, tailwind는 디폴트로 모바일 -> Desktop으로 하게끔 디자인 방식을 바꿔버렸다.
 modifier - bg-white-400 sm:bg-gray-400 md:bg-yellow-400 lg:bg-red-400 ... 이 modifier는 from의 개념으로 생각하면 됨. 
+
+다크모드를 지원할 경우 -> tailwind.config.js의 darkMode의 디폴트(사용저 브라우저 환경에 맡김)는 media, 수동으로 하겠다-> class(변경하고자 하는 곳의 부모의 className에 dark를 삽입.)
