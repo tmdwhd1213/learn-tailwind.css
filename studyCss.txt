@@ -17,3 +17,5 @@ tailwind 3.0 이전 -> 겁나 큰 파일
 text-[93432px] (만약 tailwind에 원하는 사이즈가 없다? 대괄호로 변수처럼 사용) 3.0이전에는 style={{}}을 따로 만들어서 정의했음.
 
 배경화면 쓸 때, bg-[url('/vercel.svg')] 이런 식으로 가능
+
+아이콘: svg파일 -> https://heroicons.dev
