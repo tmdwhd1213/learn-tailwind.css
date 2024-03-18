@@ -1,19 +1,22 @@
 import Layout from "@/components/layout";
+import Link from "next/link";
 import type { NextPage } from "next";
 
 const Profile: NextPage = () => {
   return (
-    <Layout title="나의 당근" hasTabBar>
+    <Layout canGoBack title="프로필" hasTabBar>
       <div className="py-10 px-4">
         <div className="flex items-center space-x-3">
           <div className="w-16 h-16 bg-slate-500 rounded-full" />
           <div className="flex flex-col">
-            <span className="font-medium text-gray-900">Steve Jebs</span>
-            <span className="text-sm text-gray-700">Edit profile &rarr;</span>
+            <span className="font-medium text-gray-900">파린이</span>
+            <Link href="/profile/edit" className="text-sm text-gray-700">
+              프로필 수정 &rarr;
+            </Link>
           </div>
         </div>
         <div className="mt-10 flex justify-around">
-          <div className="flex flex-col items-center">
+          <Link href="/profile/sold" className="flex flex-col items-center">
             <div className="w-14 h-14 text-white bg-orange-500 rounded-full flex items-center justify-center">
               <svg
                 className="w-6 h-6"
@@ -33,8 +36,8 @@ const Profile: NextPage = () => {
             <span className="text-sm mt-2 font-medium text-gray-700">
               판매내역
             </span>
-          </div>
-          <div className="flex flex-col items-center">
+          </Link>
+          <Link href="/profile/bought" className="flex flex-col items-center">
             <div className="w-14 h-14 text-white bg-orange-500 rounded-full flex items-center justify-center">
               <svg
                 className="w-6 h-6"
@@ -54,8 +57,8 @@ const Profile: NextPage = () => {
             <span className="text-sm mt-2 font-medium text-gray-700">
               구매내역
             </span>
-          </div>
-          <div className="flex flex-col items-center">
+          </Link>
+          <Link href="/profile/loved" className="flex flex-col items-center">
             <div className="w-14 h-14 text-white bg-orange-500 rounded-full flex items-center justify-center">
               <svg
                 className="w-6 h-6"
@@ -75,7 +78,7 @@ const Profile: NextPage = () => {
             <span className="text-sm mt-2 font-medium text-gray-700">
               관심목록
             </span>
-          </div>
+          </Link>
         </div>
         <div className="mt-12">
           <div className="flex space-x-4 items-center">

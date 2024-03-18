@@ -1,19 +1,14 @@
+import Button from "@/components/button";
 import Layout from "@/components/layout";
+import TextArea from "@/components/textarea";
 import type { NextPage } from "next";
 
 const Write: NextPage = () => {
   return (
     <Layout undo title="동네생활 글쓰기">
       <form className="px-4 py-10">
-        <textarea
-          id="textarea"
-          className="mt-1 shadow-sm w-full focus:ring-orange-500 rounded-md border-gray-300 focus:border-orange-500"
-          placeholder="Ask a question!"
-          rows={4}
-        />
-        <button className="mt-2 w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 focus:outline-none">
-          Submit
-        </button>
+        <TextArea required placeholder="Ask a question!" />
+        <Button text="완료" />
       </form>
     </Layout>
   );

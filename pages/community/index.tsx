@@ -1,13 +1,19 @@
+import FloatingButton from "@/components/float-button";
 import Layout from "@/components/layout";
 import type { NextPage } from "next";
+import Link from "next/link";
 
 const Community: NextPage = () => {
   const fakeArr = Array.from({ length: 6 }, (_, k) => k + 1);
   return (
-    <Layout title="궁금해요" hasTabBar>
+    <Layout title="동네생활" hasTabBar>
       <div className="py-16 px-4 space-y-8">
         {fakeArr.map((_, i) => (
-          <div key={i} className="flex flex-col cursor-pointer items-start">
+          <Link
+            href={`/community/${i}`}
+            key={i}
+            className="flex flex-col cursor-pointer items-start"
+          >
             <span className="flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-900">
               동네질문
             </span>
@@ -55,9 +61,9 @@ const Community: NextPage = () => {
                 <span>답변 1</span>
               </span>
             </div>
-          </div>
+          </Link>
         ))}
-        <button className="fixed hover:bg-orange-500 cursor-pointer transition-colors bottom-24 right-5 bg-orange-400 rounded-full p-4 text-white shadow-xl">
+        <FloatingButton href="/community/write">
           <svg
             className="w-6 h-6"
             fill="none"
@@ -72,7 +78,7 @@ const Community: NextPage = () => {
               d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
             ></path>
           </svg>
-        </button>
+        </FloatingButton>
       </div>
     </Layout>
   );
