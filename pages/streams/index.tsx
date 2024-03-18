@@ -1,20 +1,22 @@
+import FloatingButton from "@/components/float-button";
 import Layout from "@/components/layout";
 import { NextPage } from "next";
+import Link from "next/link";
 
 const Streams: NextPage = () => {
   const fakeArr = new Array(5).fill(1);
   return (
-    <Layout title="라이브" hasTabBar>
-      <div className="py-10 divide-y-2 space-y-4">
+    <Layout hasTabBar title="라이브">
+      <div className=" divide-y-[1px] space-y-4">
         {fakeArr.map((_, i) => (
-          <div className="pt-4 px-4" key={i}>
+          <Link key={i} href={`/streams/${i}`} className="pt-4 block  px-4">
             <div className="w-full rounded-md shadow-sm bg-slate-300 aspect-video" />
-            <h3 className="text-gray-700 text-lg mt-2">
-              Let&apos;s try potatos
-            </h3>
-          </div>
+            <h1 className="text-2xl mt-2 font-bold text-gray-900">
+              Galaxy S50
+            </h1>
+          </Link>
         ))}
-        <button className="fixed hover:bg-orange-500 cursor-pointer transition-colors bottom-24 right-5 bg-orange-400 rounded-full p-4 border-transparent text-white shadow-xl">
+        <FloatingButton href="/streams/create">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -29,7 +31,7 @@ const Streams: NextPage = () => {
               d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z"
             />
           </svg>
-        </button>
+        </FloatingButton>
       </div>
     </Layout>
   );
