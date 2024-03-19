@@ -19,3 +19,11 @@ text-[93432px] (만약 tailwind에 원하는 사이즈가 없다? 대괄호로 �
 배경화면 쓸 때, bg-[url('/vercel.svg')] 이런 식으로 가능
 
 아이콘: svg파일 -> https://heroicons.dev
+
+Prisma 란?
+ORM(Object Relational mapping)의 일종.
+SQL의 데이터조작 로직을 JS 객체 느낌으로 다룰수있게 도와준다.
+
+foreign key -> 다른 db의 key의 주소를 바라보고 있음.
+ex) Users DB: id: 1 username: SJ
+Comments DB: id:1 text:wow! user:(Users DB: 1) => (Users DB: 1)는? id: 1 username: SJ 이거 전체를 가리킴.
