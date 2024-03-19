@@ -27,3 +27,11 @@ SQL의 데이터조작 로직을 JS 객체 느낌으로 다룰수있게 도와�
 foreign key -> 다른 db의 key의 주소를 바라보고 있음.
 ex) Users DB: id: 1 username: SJ
 Comments DB: id:1 text:wow! user:(Users DB: 1) => (Users DB: 1)는? id: 1 username: SJ 이거 전체를 가리킴.
+
+npx prisma studio -> 프리즈마 스튜디오를 열게 해줌. (나의 경우 5555 포트가 사용되고 있어서 에러가 났는데, cmd에서 netstat -ano | findstr 포트번호 입력해서 PID값을 찾고, 작업관리자>서비스에서 해당 PID를 kill하고 돌리니 해결되었다.)
+npx prisma db push -> .env에 있는 db 주소로 내가 만든 Model을 테이블로 만들어줌. (Serverless Db를 Supabase로 가져갔고. 보안상 로컬용으로 도커를 이용해서 로컬 supabase를 켜고(npx supabase start) 이를 이용.)
+npx prisma generate -> prisma/schema.prisma에 있는 Model을 바탕으로 node_modules/@prisma/client/index.d.ts에 해당 Model의 타입을 직접 작성해줌.
+
+-- api Route
+pages폴더 내부에 api라는 폴더를 생성(혹은 그냥 있거나). 그 안에서 백엔드에서 작업할 수 있는 것들을 할 수 있음.
+ex) localhost:3000/api/client-test 하면 res.json({test: 'test'}) 이런식으로 보낸걸 확인할 수 있음.
