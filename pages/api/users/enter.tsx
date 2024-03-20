@@ -1,22 +1,56 @@
 import client from "@/libs/server/client";
-import withHandler from "@/libs/server/withHandler";
+import withHandler, { ResponseType } from "@/libs/server/withHandler";
 import { NextApiRequest, NextApiResponse } from "next";
+import { generateRandomInt4 } from "@/libs/server/utils";
+import sendMessage from "@/libs/server/sms";
+import smtpTransport from "@/libs/server/email";
 
-async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<ResponseType>
+) {
   const { email, phone } = req.body;
-  const payload = phone ? { phone: +phone } : email && { email };
+  const user = phone ? { phone: +phone } : email && { email };
+  if (!user) return res.status(400).json({ ok: false });
+  const payload = generateRandomInt4() + "";
+
   // upsert로 update, insert 한번에
-  const user = await client.user.upsert({
-    where: {
-      ...payload,
+  const token = await client.token.create({
+    data: {
+      payload,
+      user: {
+        connectOrCreate: {
+          where: {
+            ...user,
+          },
+          create: {
+            name: "Anonymous",
+            ...user,
+          },
+        },
+      },
     },
-    create: {
-      name: "Anonymous",
-      ...payload,
-    },
-    update: {},
   });
-  console.log(user);
+  if (phone) {
+    const message = await sendMessage(payload);
+    console.log(message);
+  } else if (email) {
+    const mailOptions = {
+      from: process.env.MAIL_ID,
+      to: email,
+      subject: "Nomad Carrot Authentication Email",
+      text: `Authentication Code : ${payload}`,
+    };
+
+    const sendEmail = await smtpTransport.sendMail(
+      mailOptions,
+      (error, res) => {
+        error ? console.log(error) : console.log(res);
+      }
+    );
+    smtpTransport.close();
+    console.log(sendEmail);
+  }
   /* if (email) {
     user = await client.user.findUnique({
       where: {
@@ -53,7 +87,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
     console.log(user);
   } */
-  res.status(200).end();
+  return res.json({
+    ok: true,
+  });
 }
 
 export default withHandler("POST", handler);
