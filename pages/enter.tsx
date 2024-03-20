@@ -1,15 +1,42 @@
 import Button from "@/components/button";
 import Input from "@/components/input";
+import useMutation from "@/libs/client/useMutation";
+import { cls } from "@/libs/client/utils";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
-function cls(...classNames: string[]) {
-  return classNames.join(" ");
+interface EnterForm {
+  email?: string;
+  phone?: string;
 }
 
 export default function Enter() {
+  /// [fetch로 백엔드에 POST 보내는 function(data), 뭐하는지 보고싶음.(객체)]
+  const [enter, { loading, data, error }] = useMutation("/api/users/enter");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { register, watch, reset, handleSubmit } = useForm<EnterForm>();
   const [method, setMethod] = useState<"email" | "phone">("email");
-  const onEmailClick = () => setMethod("email");
-  const onPhoneClick = () => setMethod("phone");
+
+  const onEmailClick = () => {
+    reset();
+    setMethod("email");
+  };
+  const onPhoneClick = () => {
+    reset();
+    setMethod("phone");
+  };
+  const onValid = async (validForm: EnterForm) => {
+    // setIsSubmitting(true);
+    // fetch("/api/users/enter", {
+    //   method: "POST",
+    //   body: JSON.stringify(data),
+    //   headers: { "Content-Type": "application/json" },
+    // }).then(() => setIsSubmitting(false));
+    enter(validForm);
+    // fetch("api/users/enter");
+  };
+  console.log(loading, data, error);
+  // console.log(watch());
   return (
     <div className="mt-16 px-4">
       <h3 className="text-3xl font-bold text-center">Enter to Carrot</h3>
@@ -41,9 +68,13 @@ export default function Enter() {
             </button>
           </div>
         </div>
-        <form className="flex flex-col mt-8 space-y-4">
+        <form
+          onSubmit={handleSubmit(onValid)}
+          className="flex flex-col mt-8 space-y-4"
+        >
           {method === "email" && (
             <Input
+              register={register("email")}
               name="email"
               kind="email"
               label="Email address"
@@ -53,6 +84,7 @@ export default function Enter() {
           )}
           {method === "phone" && (
             <Input
+              register={register("phone")}
               name="phone"
               label="Phone number"
               type="tel"
@@ -60,8 +92,14 @@ export default function Enter() {
               required
             />
           )}
-          {method === "email" && <Button text={"Get login link"} />}
-          {method === "phone" && <Button text={"Get one-time password"} />}
+          {method === "email" && (
+            <Button text={isSubmitting ? "Loading..." : "Get login link"} />
+          )}
+          {method === "phone" && (
+            <Button
+              text={isSubmitting ? "Loading..." : "Get one-time password"}
+            />
+          )}
         </form>
         <div className="mt-8">
           <div className="relative">
