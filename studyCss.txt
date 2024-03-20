@@ -60,3 +60,8 @@ handleSubmit(onValid, onInvalid) 유효한지, 유효하지 않은지 받음.
   })
 }
 
+## 로그인 로직
+1. Phone Num sended to Backend --> DB에서 조회 후 User ? 로그인 : 가입
+2. Token 발급 -- Connect to User with RandomNumber;
+3. Enter Phone Number(Twilio 플랫폼) --> User receive Token(RandomNumber) by SMS.
+4. Enter Token --> Send Token to Backend --> Token && Log the user in.
