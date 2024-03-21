@@ -4,7 +4,7 @@ interface InputProps {
   label: string;
   name: string;
   kind?: "text" | "phone" | "price" | "email";
-  register: UseFormRegisterReturn;
+  register?: UseFormRegisterReturn;
   type: string;
   required: boolean;
   [key: string]: any;

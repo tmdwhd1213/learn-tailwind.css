@@ -66,7 +66,7 @@ handleSubmit(onValid, onInvalid) 유효한지, 유효하지 않은지 받음.
 3. Enter Phone Number(Twilio 플랫폼) --> User receive Token(RandomNumber) by SMS.
 4. Enter Token --> Send Token to Backend --> Token && Log the user in.
 
-## Cookies
+## Cookies안에 세션. pwd -> 암호화(encrypto) -> 복호화(decrypto) -> 확인
 iron session
 장점: 세션을 위한 백엔드를 따로 구축할 필요가 없다.
 데이터를 저장하기 위해 서명되고 암호화된 쿠키를 사용하는 Node.js stateless session 유틸리티.
@@ -77,3 +77,13 @@ Next.js, Express, Nest.js, Fastify 및 모든 Node.js HTTP 프레임워크와 �
 
 # Next-auth.js (쉽게 만드는 인증 서비스)
 https://next-auth.js.org/getting-started/example
+
+# SWR (fetch 대신에 쓰는 라이브러리)
+super_cache = {
+  [url_key]: {
+    ...data // ok: true, profile: {id: 9, phone: 01012341234, email: null, ...}
+  }
+}
+이렇게 자체적으로 캐싱이 되는 객체를 지니고 있어 각 url마다 DATA를 기억하고 해당 URL을 호출하면
+바로 data를 보여줌. (따라서 Loading 중일 때 undefined가 뜨지 않음.)
+Network탭을 보면 GET요청을 하고 있음.
