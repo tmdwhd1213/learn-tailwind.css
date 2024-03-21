@@ -12,7 +12,10 @@ export interface ResponseType {
 }
 
 export default function withHandler(method: Method, handler: NextApiHandler) {
-  return async function (req: NextApiRequest, res: NextApiResponse) {
+  return async function (
+    req: NextApiRequest,
+    res: NextApiResponse
+  ): Promise<any> {
     if (req.method !== method) {
       res.status(405).end();
     }

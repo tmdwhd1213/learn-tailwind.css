@@ -1,8 +1,8 @@
-import nodemailer from "nodemailer";
+import { createTransport } from "nodemailer";
 
-const smtpTransport = nodemailer.createTransport({
+const smtpTransport = createTransport({
   service: "Naver",
-  host: process.env.HOST_NAVER,
+  host: "smtp.naver.com",
   port: 587,
   auth: {
     user: process.env.MAIL_ID,

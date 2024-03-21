@@ -65,3 +65,15 @@ handleSubmit(onValid, onInvalid) 유효한지, 유효하지 않은지 받음.
 2. Token 발급 -- Connect to User with RandomNumber;
 3. Enter Phone Number(Twilio 플랫폼) --> User receive Token(RandomNumber) by SMS.
 4. Enter Token --> Send Token to Backend --> Token && Log the user in.
+
+## Cookies
+iron session
+장점: 세션을 위한 백엔드를 따로 구축할 필요가 없다.
+데이터를 저장하기 위해 서명되고 암호화된 쿠키를 사용하는 Node.js stateless session 유틸리티.
+Next.js, Express, Nest.js, Fastify 및 모든 Node.js HTTP 프레임워크와 함께 작동합니다. 
+세션 데이터는 암호화된 쿠키("seals")에 저장됩니다.
+그리고 당신의 서버만이 세션 데이터를 디코딩(decode)할 수 있습니다.
+세션 ID가 없으므로 서버 관점에서 iron session을 "stateless"로 만듭니다.
+
+# Next-auth.js (쉽게 만드는 인증 서비스)
+https://next-auth.js.org/getting-started/example
