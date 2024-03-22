@@ -1,29 +1,25 @@
 import Button from "@/components/button";
 import Layout from "@/components/layout";
-import { Product } from "@prisma/client";
+import { splitWord } from "@/libs/client/utils";
+import { Product, User } from "@prisma/client";
 import type { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 
-interface User {
-  name: string;
-  id: number;
-  avatar: string;
-}
-
 interface ProductWithUser extends Product {
   user: User;
 }
 
-interface ProductResponse {
+interface ItemDetailResponse {
   ok: boolean;
   product: ProductWithUser;
+  relatedProducts: Product[];
 }
 
 const ItemDetail: NextPage = () => {
   const router = useRouter();
-  const { data } = useSWR<ProductResponse>(
+  const { data } = useSWR<ItemDetailResponse>(
     router.query.id ? `/api/products/${router.query.id}` : null
   );
 
@@ -81,15 +77,17 @@ const ItemDetail: NextPage = () => {
         </div>
         <div>
           <h2 className="text-2xl font-bold text-gray-950">
-            같은 {data?.product.name} 물품이에요
+            같은 {splitWord(data?.product.name!)} 물품이에요
           </h2>
           <div className="mt-6 grid grid-cols-2 gap-4">
-            {fakeArr.map((_, i) => (
-              <div key={i}>
+            {data?.relatedProducts?.map((product) => (
+              <Link href={`/products/${product.id}`} key={product.id}>
                 <div className="h-56 w-full mb-4 bg-slate-300" />
-                <h3 className="text-gray-700 -mb-1">Galaxy S60</h3>
-                <p className="text-sm font-medium text-gray-950">$6</p>
-              </div>
+                <h3 className="text-gray-700 -mb-1">{product.name}</h3>
+                <p className="text-sm font-medium text-gray-950">
+                  {product.price.toLocaleString()}원
+                </p>
+              </Link>
             ))}
           </div>
         </div>
