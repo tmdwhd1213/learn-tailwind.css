@@ -3,11 +3,40 @@ import Button from "@/components/button";
 import Input from "@/components/input";
 import Layout from "@/components/layout";
 import TextArea from "@/components/textarea";
+import { useForm } from "react-hook-form";
+import useMutation from "@/libs/client/useMutation";
+import { useEffect } from "react";
+import { Product } from "@prisma/client";
+import { useRouter } from "next/router";
+
+interface UploadProductForm {
+  name: string;
+  price: number;
+  description: string;
+}
+
+interface UploadProductMutation {
+  ok: boolean;
+  product: Product;
+}
 
 const Upload: NextPage = () => {
+  const router = useRouter();
+  const [uploadProduct, { loading, data }] =
+    useMutation<UploadProductMutation>("/api/products");
+  const { register, handleSubmit } = useForm<UploadProductForm>();
+  const onValid = (data: UploadProductForm) => {
+    if (loading) return;
+    uploadProduct(data);
+  };
+  useEffect(() => {
+    if (data?.ok) {
+      router.push(`/products/${data.product.id}`);
+    }
+  }, [data, router]);
   return (
     <Layout canGoBack title="내 물건 팔기">
-      <form className="p-4 space-y-4">
+      <form className="p-4 space-y-4" onSubmit={handleSubmit(onValid)}>
         <div>
           <label className="w-full cursor-pointer text-gray-600 hover:text-orange-500 hover:border-orange-500 hover:transition-colors flex items-center justify-center border-2 border-dashed border-gray-300 h-48 rounded-md">
             <svg
@@ -34,6 +63,7 @@ const Upload: NextPage = () => {
           type="text"
           kind="text"
           placeholder="제목"
+          register={register("name", { required: true })}
         />
         <Input
           required
@@ -42,13 +72,15 @@ const Upload: NextPage = () => {
           name="price"
           type="text"
           kind="price"
+          register={register("price", { required: true })}
         />
         <TextArea
           name="description"
           label="자세한 설명"
           placeholder="호계3동에 올릴 게시글 내용을 작성해 주세요. (판매 금지 물품은 게시가 제한될 수 있어요.)"
+          register={register("description", { required: true })}
         />
-        <Button text="작성 완료" />
+        <Button text={loading ? "잠시만 기다려주세요" : "작성 완료"} />
       </form>
     </Layout>
   );

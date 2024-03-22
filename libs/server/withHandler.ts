@@ -12,13 +12,13 @@ export interface ResponseType {
 }
 
 interface ConfigType {
-  method: Method;
+  methods: Method[];
   handler: NextApiHandler;
   isPrivate?: boolean;
 }
 
 export default function withHandler({
-  method,
+  methods,
   handler,
   isPrivate = true,
 }: ConfigType) {
@@ -26,7 +26,8 @@ export default function withHandler({
     req: NextApiRequest,
     res: NextApiResponse
   ): Promise<any> {
-    if (req.method !== method) {
+    // Method가 들어왔으나 엉뚱한 요청일 경우 405
+    if (req.method && !methods.includes(req.method as Method)) {
       res.status(405).end();
     }
 
@@ -36,7 +37,7 @@ export default function withHandler({
     try {
       await handler(req, res);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return res.status(500).json({ error });
     }
   };
