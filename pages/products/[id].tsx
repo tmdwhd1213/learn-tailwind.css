@@ -1,6 +1,7 @@
 import Button from "@/components/button";
 import Layout from "@/components/layout";
-import { splitWord } from "@/libs/client/utils";
+import useMutation from "@/libs/client/useMutation";
+import { cls, splitWord } from "@/libs/client/utils";
 import { Product, User } from "@prisma/client";
 import type { NextPage } from "next";
 import Link from "next/link";
@@ -15,6 +16,7 @@ interface ItemDetailResponse {
   ok: boolean;
   product: ProductWithUser;
   relatedProducts: Product[];
+  isLiked: boolean;
 }
 
 const ItemDetail: NextPage = () => {
@@ -22,6 +24,10 @@ const ItemDetail: NextPage = () => {
   const { data } = useSWR<ItemDetailResponse>(
     router.query.id ? `/api/products/${router.query.id}` : null
   );
+  const [toggleFav] = useMutation(`/api/products/${router.query.id}/fav`);
+  const onFavClick = () => {
+    toggleFav({});
+  };
 
   console.log(data?.relatedProducts);
 
@@ -56,7 +62,15 @@ const ItemDetail: NextPage = () => {
             </p>
             <div className="flex items-center justify-between space-x-2">
               <Button text="채팅하기" />
-              <button className="p-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500">
+              <button
+                onClick={onFavClick}
+                className={cls(
+                  "p-3 rounded-md flex items-center justify-center",
+                  data?.isLiked
+                    ? "text-red-400 hover:text-red-500"
+                    : "text-gray-400 hover:bg-gray-100 hover:text-gray-500"
+                )}
+              >
                 <svg
                   className="h-6 w-6 "
                   xmlns="http://www.w3.org/2000/svg"
