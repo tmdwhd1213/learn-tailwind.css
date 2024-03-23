@@ -1,0 +1,89 @@
+tailwind intelisense -> 확장프로그램 설치(자동완성)
+modifier -> 
+peer modifier -> input의 상태에 따라서 span의 스타일을 변화시킬 수 있다.
+
+HTML - <detail> -> 아코디언 기능 만들 수 있음.
+  <summary>What is my fav. food</summary>
+  <div>김치</div>
+</detail>
+
+보통 디자인을 할 때 Desktop -> 모바일로 하는데, tailwind는 디폴트로 모바일 -> Desktop으로 하게끔 디자인 방식을 바꿔버렸다.
+modifier - bg-white-400 sm:bg-gray-400 md:bg-yellow-400 lg:bg-red-400 ... 이 modifier는 from의 개념으로 생각하면 됨. 
+
+다크모드를 지원할 경우 -> tailwind.config.js의 darkMode의 디폴트(사용저 브라우저 환경에 맡김)는 media, 수동으로 하겠다-> class(변경하고자 하는 곳의 부모의 className에 dark를 삽입.)
+
+tailwind 3.0 이전 -> 겁나 큰 파일
+이후 -> Just In Time 컴파일러 (실시간으로 코드를 감시하면서 그때그때 필요한 클래스를 생성.)
+text-[93432px] (만약 tailwind에 원하는 사이즈가 없다? 대괄호로 변수처럼 사용) 3.0이전에는 style={{}}을 따로 만들어서 정의했음.
+
+배경화면 쓸 때, bg-[url('/vercel.svg')] 이런 식으로 가능
+
+아이콘: svg파일 -> https://heroicons.dev
+
+Prisma 란?
+ORM(Object Relational mapping)의 일종.
+SQL의 데이터조작 로직을 JS 객체 느낌으로 다룰수있게 도와준다.
+
+foreign key -> 다른 db의 key의 주소를 바라보고 있음.
+ex) Users DB: id: 1 username: SJ
+Comments DB: id:1 text:wow! user:(Users DB: 1) => (Users DB: 1)는? id: 1 username: SJ 이거 전체를 가리킴.
+
+npx prisma studio -> 프리즈마 스튜디오를 열게 해줌. (나의 경우 5555 포트가 사용되고 있어서 에러가 났는데, cmd에서 netstat -ano | findstr 포트번호 입력해서 PID값을 찾고, 작업관리자>서비스에서 해당 PID를 kill하고 돌리니 해결되었다.)
+npx prisma db push -> .env에 있는 db 주소로 내가 만든 Model을 테이블로 만들어줌. (Serverless Db를 Supabase로 가져갔고. 보안상 로컬용으로 도커를 이용해서 로컬 supabase를 켜고(npx supabase start) 이를 이용.)
+npx prisma generate -> prisma/schema.prisma에 있는 Model을 바탕으로 node_modules/@prisma/client/index.d.ts에 해당 Model의 타입을 직접 작성해줌.
+
+-- api Route
+pages폴더 내부에 api라는 폴더를 생성(혹은 그냥 있거나). 그 안에서 백엔드에서 작업할 수 있는 것들을 할 수 있음.
+ex) localhost:3000/api/client-test 하면 res.json({test: 'test'}) 이런식으로 보낸걸 확인할 수 있음.
+- 프론트에서 헤더를 설정 (JSON으로 보내고 싶은 경우) {headers: {'Content-Type': 'application/json'}}
+  해야 백엔드에서 객체로 받을 수 있음. Default는 'text/plain;charset=UTF-8'임.
+  만약 {"email":"test@gmail.com"} 이걸 보냈다면 이것의 타입은 String임.
+
+- Mutation은 데이터를 변경하기 위해 사용되는 요청.
+  일반적으로 데이터를 생성(create), 업데이트(update), 삭제(delete)하는 작업에 사용.
+
+
+
+* React-Hook-from
+<form>을 작성할 때, input의 태그에 name, onchange ref.. 기타 등등을 한번에 해결할 수 있는
+const {register} = useForm();
+// console.log(register('user')); // {name: 'name', onChange: ƒ, onBlur: ƒ, ref: ƒ}
+return <input {...register("username")} type='text' placeholder='username' />
+이런 식으로 스프레드 연산자로 속성 값을 넣어 줄 수 있다.
+
+watch => register가 있는 부분이 변화하면 리랜더링이 일어날 때마다 감시함.
+handleSubmit(onValid, onInvalid) 유효한지, 유효하지 않은지 받음.
+    {...register(_, {
+    require: '여기에 사용자에게 보내질 메세지를 적을 수 있음.',
+    minLength: 5 // 이러면 onInvalid(errors)의 errors.type으로 무슨 종류의 유효성 검사에서 걸렸는지
+    // 확인 가능함.
+  })
+}
+
+## 로그인 로직
+1. Phone Num sended to Backend --> DB에서 조회 후 User ? 로그인 : 가입
+2. Token 발급 -- Connect to User with RandomNumber;
+3. Enter Phone Number(Twilio 플랫폼) --> User receive Token(RandomNumber) by SMS.
+4. Enter Token --> Send Token to Backend --> Token && Log the user in.
+
+## Cookies안에 세션. pwd -> 암호화(encrypto) -> 복호화(decrypto) -> 확인
+iron session
+장점: 세션을 위한 백엔드를 따로 구축할 필요가 없다.
+데이터를 저장하기 위해 서명되고 암호화된 쿠키를 사용하는 Node.js stateless session 유틸리티.
+Next.js, Express, Nest.js, Fastify 및 모든 Node.js HTTP 프레임워크와 함께 작동합니다. 
+세션 데이터는 암호화된 쿠키("seals")에 저장됩니다.
+그리고 당신의 서버만이 세션 데이터를 디코딩(decode)할 수 있습니다.
+세션 ID가 없으므로 서버 관점에서 iron session을 "stateless"로 만듭니다.
+
+# Next-auth.js (쉽게 만드는 인증 서비스)
+https://next-auth.js.org/getting-started/example
+
+# SWR (fetch 대신에 쓰는 라이브러리)
+super_cache = {
+  [url_key]: {
+    ...data // ok: true, profile: {id: 9, phone: 01012341234, email: null, ...}
+  }
+}
+이렇게 자체적으로 캐싱이 되는 객체를 지니고 있어 각 url마다 DATA를 기억하고 해당 URL을 호출하면
+바로 data를 보여줌. (따라서 Loading 중일 때 undefined가 뜨지 않음.)
+Network탭을 보면 GET요청을 하고 있음.
