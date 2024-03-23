@@ -23,7 +23,8 @@ const ItemDetail: NextPage = () => {
     router.query.id ? `/api/products/${router.query.id}` : null
   );
 
-  const fakeArr = Array.from({ length: 6 }, (_, k) => 1 + k);
+  console.log(data?.relatedProducts);
+
   return (
     <Layout canGoBack canGoHome>
       <div className="px-4 py-4">

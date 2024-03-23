@@ -31,7 +31,7 @@ async function handler(
 
   const relatedProducts = await client.product.findMany({
     where: {
-      OR: terms,
+      OR: [terms![0]], // 첫번째 단어만 필터링
       AND: {
         id: {
           not: product?.id,
@@ -40,6 +40,7 @@ async function handler(
     },
     take: 4,
   });
+  console.log(terms);
 
   res.json({ ok: true, product, relatedProducts });
 }

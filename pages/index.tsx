@@ -12,7 +12,6 @@ interface ProductsResponse {
 }
 
 const Home: NextPage = () => {
-  const fakeData = Array.from({ length: 12 }, () => 1);
   const { user, isLoading } = useUser();
   const { data } = useSWR<ProductsResponse>("/api/products");
 
