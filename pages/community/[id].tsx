@@ -6,6 +6,9 @@ import { useRouter } from "next/router";
 import useSWR from "swr";
 import { Answer, Post, User } from "@prisma/client";
 import Link from "next/link";
+import useMutation from "@/libs/client/useMutation";
+import { cls } from "@/libs/client/utils";
+import { useEffect } from "react";
 
 interface AnswerWithUser extends Answer {
   user: User;
@@ -23,15 +26,66 @@ interface PostWithUser extends Post {
 interface CommunityPostResponse {
   ok: boolean;
   post: PostWithUser;
+  isWondering: boolean;
+}
+
+interface AnswerForm {
+  answer: string;
+}
+
+interface AnswerResponse {
+  ok: boolean;
+  answer: Answer;
 }
 
 const CommunityPostDetail: NextPage = () => {
   const router = useRouter();
-  const { data, error } = useSWR<CommunityPostResponse>(
+  const { data, mutate } = useSWR<CommunityPostResponse>(
     router.query.id ? `/api/posts/${router.query.id}` : null
   );
-  console.log(data);
-  const { register, handleSubmit } = useForm();
+  ////////////////// wonder
+  const [wonder, { loading }] = useMutation(
+    `/api/posts/${router.query.id}/wonder`
+  );
+  const onWonderClick = () => {
+    if (!data) return;
+    mutate(
+      {
+        ...data,
+        post: {
+          ...data.post,
+          _count: {
+            ...data.post._count,
+            wondering: data.isWondering
+              ? data?.post._count.wondering - 1
+              : data?.post._count.wondering + 1,
+          },
+        },
+        isWondering: !data.isWondering,
+      },
+      false
+    );
+    if (!loading) {
+      wonder({});
+    }
+  };
+  //////////////////////////////
+  const { register, handleSubmit, reset } = useForm<AnswerForm>();
+  const onValid = (form: AnswerForm) => {
+    if (answerLoading) return;
+    sendAnswer(form);
+  };
+  const [sendAnswer, { data: answerData, loading: answerLoading }] =
+    useMutation<AnswerResponse>(`/api/posts/${router.query.id}/answers`);
+
+  useEffect(() => {
+    if (answerData && answerData.ok) {
+      // clean the form
+      reset();
+      mutate();
+    }
+  }, [answerData, reset, mutate]);
+
   return (
     <Layout canGoBack>
       <div>
@@ -58,7 +112,13 @@ const CommunityPostDetail: NextPage = () => {
           </div>
         </div>
         <div className="flex space-x-5 mt-3 text-gray-700 py-2.5 border-t border-b-[2px] w-full">
-          <span className="flex pl-4 space-x-2 items-center text-sm">
+          <button
+            onClick={onWonderClick}
+            className={cls(
+              "flex pl-4 space-x-2 items-center text-sm",
+              data?.isWondering ? "text-green-500" : ""
+            )}
+          >
             <svg
               className="w-4 h-4"
               fill="none"
@@ -74,7 +134,7 @@ const CommunityPostDetail: NextPage = () => {
               ></path>
             </svg>
             <span>궁금해요 {data?.post?._count?.wondering}</span>
-          </span>
+          </button>
           <span className="flex space-x-2 items-center text-sm">
             <svg
               className="w-4 h-4"
@@ -93,7 +153,7 @@ const CommunityPostDetail: NextPage = () => {
             <span>답변 {data?.post?._count?.answers}</span>
           </span>
         </div>
-        {data?.post.answers.map((answer) => (
+        {data?.post?.answers.map((answer) => (
           <div key={answer.id} className="px-4 my-5 space-y-5">
             <div className="flex items-start space-x-3">
               <div className="w-8 h-8 bg-slate-200 rounded-full" />
@@ -102,23 +162,24 @@ const CommunityPostDetail: NextPage = () => {
                   {answer.user.name}
                 </span>
                 <span className="text-xs text-gray-500 block">
-                  {answer.createdAt.toDateString()}
+                  {answer.createdAt?.toLocaleString()}
                 </span>
                 <p className="text-gray-700 mt-2">{answer.answer}</p>
               </div>
             </div>
           </div>
         ))}
-        <div className="px-4">
+        <form onSubmit={handleSubmit(onValid)} className="px-4">
           <TextArea
             name="description"
-            placeholder="Answer this question!"
+            placeholder="댓글을 입력해주세요. (5자 이상으로 입력해주세요.)"
+            register={register("answer", { required: true, minLength: 5 })}
             required
           />
           <button className="mt-2 w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 focus:outline-none">
-            Reply
+            {answerLoading ? "Loading..." : `답변하기`}
           </button>
-        </div>
+        </form>
       </div>
     </Layout>
   );

@@ -8,34 +8,33 @@ async function handler(
   res: NextApiResponse<ResponseType>
 ) {
   const {
-    body: { question },
+    query: { id },
     session: { user },
+    body: { answer },
   } = req;
-  switch (req.method) {
-    case "POST":
-      const post = await client.post.create({
-        data: {
-          question,
-          user: {
-            connect: {
-              id: user?.id,
-            },
-          },
+  // post를 쓰기 전에 같은 answer가 있는지 확인할 것. 있다면 404에러나
+  const newAnswer = await client.answer.create({
+    data: {
+      user: {
+        connect: {
+          id: user?.id,
         },
-      });
-
-      res.json({ ok: true, post });
-      break;
-
-    case "GET":
-      const posts = await client.post.findMany();
-      res.json({ ok: true, posts });
-  }
+      },
+      post: {
+        connect: {
+          id: +id!,
+        },
+      },
+      answer,
+    },
+  });
+  console.log(newAnswer);
+  res.json({ ok: true, answer: newAnswer });
 }
 
 export default withApiSession(
   withHandler({
-    methods: ["POST", "GET"],
+    methods: ["POST"],
     handler,
     isPrivate: true,
   })

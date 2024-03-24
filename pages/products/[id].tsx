@@ -30,17 +30,20 @@ const ItemDetail: NextPage = () => {
   const { data, mutate: boundMutate } = useSWR<ItemDetailResponse>(
     router.query.id ? `/api/products/${router.query.id}` : null
   );
-  const [toggleFav] = useMutation(`/api/products/${router.query.id}/fav`);
+  const [toggleFav, { loading }] = useMutation(
+    `/api/products/${router.query.id}/fav`
+  );
   const onFavClick = () => {
-    toggleFav({});
+    // 유저가 마구 클릭할 때 생기는 race condition 방지
+    if (!loading) {
+      toggleFav({});
+    }
     // 2번째 인자를 true로 하면 1번째 인자를 데이터로 실시간 fetching해서 최신화를 하고.
     // false로 하면 fetching은 안하고 1번째 인자를 화면에 보여줌.
     if (!data) return;
     boundMutate((prev) => prev && { ...data, isLiked: !prev?.isLiked }, false);
     //unboundMutate(`/api/users/me`, (prev: any) => ({ ok: !prev.ok }), false);
   };
-
-  console.log(data?.relatedProducts);
 
   return (
     <Layout canGoBack canGoHome>

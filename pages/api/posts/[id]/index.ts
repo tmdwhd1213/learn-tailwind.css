@@ -9,6 +9,7 @@ async function handler(
 ) {
   const {
     query: { id },
+    session: { user },
   } = req;
   const post = await client.post.findUnique({
     where: {
@@ -43,7 +44,16 @@ async function handler(
       },
     },
   });
-  res.json({ ok: true, post });
+  const isWondering = !!(await client.wondering.findFirst({
+    where: {
+      postId: +id!,
+      userId: user?.id,
+    },
+    select: {
+      id: true,
+    },
+  }));
+  res.json({ ok: true, post, isWondering });
 }
 
 export default withApiSession(
