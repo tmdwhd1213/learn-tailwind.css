@@ -9,7 +9,16 @@ async function handler(
 ) {
   switch (req.method) {
     case "GET":
-      const products = await client.product.findMany({});
+      const products = await client.product.findMany({
+        include: {
+          // relate된 것의 갯수를 가리킴.
+          _count: {
+            select: {
+              favs: true,
+            },
+          },
+        },
+      });
 
       res.json({ ok: true, products });
       break;

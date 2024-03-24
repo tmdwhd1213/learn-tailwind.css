@@ -1,8 +1,28 @@
 import Layout from "@/components/layout";
 import type { NextPage } from "next";
 import TextArea from "@/components/textarea";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/router";
+import useSWR from "swr";
+import { Post, User } from "@prisma/client";
+import Link from "next/link";
+
+interface PostWithUser extends Post {
+  user: User;
+}
+
+interface CommunityPostResponse {
+  ok: boolean;
+  post: PostWithUser;
+}
 
 const CommunityPostDetail: NextPage = () => {
+  const router = useRouter();
+  const { data, error } = useSWR<CommunityPostResponse>(
+    router.query.id ? `/api/posts/${router.query.id}` : null
+  );
+  console.log(data);
+  const { register, handleSubmit } = useForm();
   return (
     <Layout canGoBack>
       <div>
@@ -12,16 +32,20 @@ const CommunityPostDetail: NextPage = () => {
         <div className="flex mb-3 px-4 cursor-pointer pb-3 border-b items-center space-x-3">
           <div className="w-10 h-10 rounded-full bg-slate-300" />
           <div>
-            <p className="text-sm font-medium text-gray-700">Steve Jebs</p>
-            <p className="text-xs font-medium text-gray-500">
-              View profile &rarr;
+            <p className="text-sm font-medium text-gray-700">
+              {data?.post?.user?.name}
             </p>
+            <Link href={`/users/profiles/${data?.post?.user?.id}`}>
+              <p className="text-xs font-medium text-gray-500">
+                View profile &rarr;
+              </p>
+            </Link>
           </div>
         </div>
         <div>
           <div className="mt-2 px-4 text-gray-700">
-            <span className="text-orange-500 font-medium">Q.</span> What is the
-            best mandu restaurant?
+            <span className="text-orange-500 font-medium">Q.</span>{" "}
+            {data?.post?.question}
           </div>
         </div>
         <div className="flex space-x-5 mt-3 text-gray-700 py-2.5 border-t border-b-[2px] w-full">
@@ -78,6 +102,7 @@ const CommunityPostDetail: NextPage = () => {
         ))}
         <div className="px-4">
           <TextArea
+            register={register("")}
             name="description"
             placeholder="Answer this question!"
             required
