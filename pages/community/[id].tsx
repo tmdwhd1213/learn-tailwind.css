@@ -7,7 +7,7 @@ import useSWR from "swr";
 import { Answer, Post, User } from "@prisma/client";
 import Link from "next/link";
 import useMutation from "@/libs/client/useMutation";
-import { cls } from "@/libs/client/utils";
+import { cls, getTimeDifferenceString } from "@/libs/client/utils";
 import { useEffect } from "react";
 
 interface AnswerWithUser extends Answer {
@@ -162,7 +162,7 @@ const CommunityPostDetail: NextPage = () => {
                   {answer.user.name}
                 </span>
                 <span className="text-xs text-gray-500 block">
-                  {answer.createdAt?.toLocaleString()}
+                  {getTimeDifferenceString(answer.createdAt)}
                 </span>
                 <p className="text-gray-700 mt-2">{answer.answer}</p>
               </div>

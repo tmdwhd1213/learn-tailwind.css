@@ -35,7 +35,6 @@ export default function Forms() {
     formState: { errors },
   } = useForm<LoginForm>({ mode: "onChange" });
   const onValid = (data: LoginForm) => {
-    console.log(data);
     setError("username", { message: "Taken username" });
     // reset(); // 전체 리셋
     resetField("password"); //리셋 필드
@@ -43,8 +42,6 @@ export default function Forms() {
   const onInvalid = (errors: FieldErrors) => {
     console.log(errors);
   };
-  // console.log(watch());
-  console.log(errors);
 
   return (
     <>
