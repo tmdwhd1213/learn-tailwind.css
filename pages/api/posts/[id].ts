@@ -22,6 +22,25 @@ async function handler(
           avatar: true,
         },
       },
+      answers: {
+        select: {
+          answer: true,
+          id: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              avatar: true,
+            },
+          },
+        },
+      },
+      _count: {
+        select: {
+          answers: true,
+          wondering: true,
+        },
+      },
     },
   });
   res.json({ ok: true, post });
