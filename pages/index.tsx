@@ -6,7 +6,7 @@ import { Product } from "@prisma/client";
 import type { NextPage } from "next";
 import useSWR from "swr";
 
-interface ProductwithLikes extends Product {
+export interface ProductwithLikes extends Product {
   _count: {
     favs: number;
   };
