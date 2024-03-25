@@ -87,3 +87,18 @@ super_cache = {
 이렇게 자체적으로 캐싱이 되는 객체를 지니고 있어 각 url마다 DATA를 기억하고 해당 URL을 호출하면
 바로 data를 보여줌. (따라서 Loading 중일 때 undefined가 뜨지 않음.)
 Network탭을 보면 GET요청을 하고 있음.
+
+# Seeding your database
+시딩을 사용하면 데이터베이스에서 동일한 데이터를 일관되게 다시 생성할 수 있으며 다음을 수행할 수 있습니다.
+1. 애플리케이션을 시작하는 데 필요한 데이터(예: 기본 언어 또는 기본 통화)로 데이터베이스를 채웁니다.
+2. 개발 환경에서 애플리케이션을 검증하고 사용하기 위한 기본 데이터를 제공합니다.
+
+npm install -D ts-node
+
+데이터베이스를 시드하려면 db seed CLI 명령을 실행하십시오.
+npx prisma db seed
+```
+// package.json
+"prisma": {
+"seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+},

@@ -23,6 +23,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.51.1",
     "swr": "^2.2.5",
+    "ts-node": "^10.9.2",
     "twilio": "^5.0.1"
   },
   "devDependencies": {
@@ -36,5 +37,8 @@
     "supabase": "^1.148.6",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   }
 }

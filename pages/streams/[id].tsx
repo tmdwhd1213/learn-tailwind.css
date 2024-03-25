@@ -1,15 +1,30 @@
 import Layout from "@/components/layout";
 import Message from "@/components/message";
 import useMutation from "@/libs/client/useMutation";
+import useUser from "@/libs/client/useUser";
 import { Stream } from "@prisma/client";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import useSWR from "swr";
 
+interface StreamMessage {
+  message: string;
+  id: number;
+  user: {
+    avatar?: string;
+    id: number;
+  };
+}
+
+interface StreamWithMessages extends Stream {
+  streamMessages: StreamMessage[];
+}
+
 interface StreamResponse {
   ok: boolean;
-  stream: Stream;
+  stream: StreamWithMessages;
 }
 
 interface MessageForm {
@@ -17,24 +32,48 @@ interface MessageForm {
 }
 
 const StreamsDetail: NextPage = () => {
+  const { user } = useUser();
   const router = useRouter();
   const { register, handleSubmit, reset } = useForm<MessageForm>();
-  const { data } = useSWR<StreamResponse>(
-    router.query.id ? `/api/streams/${router.query.id}` : null
+  const { data, mutate } = useSWR<StreamResponse>(
+    router.query.id ? `/api/streams/${router.query.id}` : null,
+    {
+      refreshInterval: 1000,
+    }
   );
+
   const [sendMessage, { loading, data: sendMessageData }] = useMutation(
     `/api/streams/${router.query.id}/messages`
   );
   const onValid = (form: MessageForm) => {
     if (loading) return;
     reset();
+    mutate(
+      (prev) =>
+        prev &&
+        ({
+          ...prev,
+          stream: {
+            ...prev.stream,
+            streamMessages: [
+              ...prev.stream.streamMessages,
+              { id: Date.now(), message: form.message, user: { ...user } },
+            ],
+          },
+        } as any),
+      false
+    );
     sendMessage(form);
   };
-  const fakeArr = new Array(5).fill(1);
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    scrollRef?.current?.scrollIntoView();
+  });
+
   return (
-    <Layout canGoBack title="라이브">
-      <div className="py-10 px-4 space-y-4">
-        <div className="w-full rounded-md shadow-sm bg-slate-300 aspect-video" />
+    <Layout canGoBack title="라이브 커머스">
+      <div className="py-10 px-4  space-y-4">
         <div className="mt-5">
           <h1 className="text-3xl font-bold text-gray-900">
             {data?.stream?.name}
@@ -46,32 +85,33 @@ const StreamsDetail: NextPage = () => {
         </div>
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Live Chat</h2>
-          <div className="pb-16 h-[60vh] overflow-y-scroll px-4 py-10 space-y-4">
-            {fakeArr.map((_, i) => (
-              <div key={i} className="space-y-4">
-                <Message message="Hi how much are you selling them for?" />
-                <Message message="I want ￦20,000" isReversed />
-                <Message message="미쳤어" />
-              </div>
+          <div className="py-10 pb-16 h-[50vh] overflow-y-scroll  px-4 space-y-4">
+            {data?.stream.streamMessages.map((message) => (
+              <Message
+                key={message.id}
+                message={message.message}
+                isReversed={message.user.id === user?.id}
+              />
             ))}
+            <div ref={scrollRef} />
           </div>
-        </div>
-        <div className="fixed w-full mx-auto max-w-md bottom-2 inset-x-0">
-          <form
-            onSubmit={handleSubmit(onValid)}
-            className="flex relative items-center"
-          >
-            <input
-              {...register("message", { required: true })}
-              type="text"
-              className="shadow-sm rounded-full w-full pr-12 border-gray-300 focus:ring-orange-500 focus:outline-none focus:border-orange-500"
-            />
-            <div className="absolute inset-y-0 flex py-1.5 pr-1.5 right-0">
-              <button className="flex items-center focus:ring-2 focus:ring-offset-2 focus: ring-orange-500 bg-orange-500 rounded-full px-3 hover:bg-orange-600 hover:transition-colors text-sm text-white">
-                &rarr;
-              </button>
-            </div>
-          </form>
+          <div className="fixed py-2 bg-white  bottom-0 inset-x-0">
+            <form
+              onSubmit={handleSubmit(onValid)}
+              className="flex relative max-w-md items-center  w-full mx-auto"
+            >
+              <input
+                type="text"
+                {...register("message", { required: true })}
+                className="shadow-sm rounded-full w-full border-gray-300 focus:ring-orange-500 focus:outline-none pr-12 focus:border-orange-500"
+              />
+              <div className="absolute inset-y-0 flex py-1.5 pr-1.5 right-0">
+                <button className="flex focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 items-center bg-orange-500 rounded-full px-3 hover:bg-orange-600 text-sm text-white">
+                  &rarr;
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </Layout>
