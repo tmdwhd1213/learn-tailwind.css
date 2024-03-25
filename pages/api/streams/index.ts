@@ -10,12 +10,22 @@ async function handler(
   const {
     session: { user },
     body: { name, price, description },
+    query: { page },
   } = req;
 
   switch (req.method) {
     case "GET":
-      const streams = await client.stream.findMany();
-      res.json({ ok: true, streams });
+      const PAGE_OFFSET = 10;
+      const streamsCount = await client.stream.count();
+      const streams = await client.stream.findMany({
+        take: PAGE_OFFSET,
+        skip: (Number(page) - 1) * PAGE_OFFSET,
+      });
+      res.json({
+        ok: true,
+        streams,
+        pages: Math.ceil(streamsCount / PAGE_OFFSET),
+      });
       break;
 
     case "POST":

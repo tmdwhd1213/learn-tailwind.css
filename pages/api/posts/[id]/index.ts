@@ -37,6 +37,7 @@ async function handler(
             },
           },
         },
+        take: 10,
       },
       _count: {
         select: {

@@ -7,8 +7,16 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
 ) {
+  const {
+    body: { name, price, description },
+    session: { user },
+    query: { page },
+  } = req;
+
   switch (req.method) {
     case "GET":
+      const PAGE_OFFSET = 10;
+      const productsCount = await client.product.count();
       const products = await client.product.findMany({
         include: {
           // relate된 것의 갯수를 가리킴.
@@ -18,16 +26,17 @@ async function handler(
             },
           },
         },
+        take: PAGE_OFFSET,
+        skip: (Number(page) - 1) * PAGE_OFFSET,
       });
 
-      res.json({ ok: true, products });
+      res.json({
+        ok: true,
+        products,
+        pages: Math.ceil(productsCount / PAGE_OFFSET),
+      });
       break;
     case "POST":
-      const {
-        body: { name, price, description },
-        session: { user },
-      } = req;
-
       const product = await client.product.create({
         data: {
           name,
