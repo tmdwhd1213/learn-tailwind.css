@@ -1,8 +1,10 @@
 import Layout from "@/components/layout";
 import Message from "@/components/message";
+import useMutation from "@/libs/client/useMutation";
 import { Stream } from "@prisma/client";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
 import useSWR from "swr";
 
 interface StreamResponse {
@@ -10,11 +12,24 @@ interface StreamResponse {
   stream: Stream;
 }
 
+interface MessageForm {
+  message: string;
+}
+
 const StreamsDetail: NextPage = () => {
   const router = useRouter();
+  const { register, handleSubmit, reset } = useForm<MessageForm>();
   const { data } = useSWR<StreamResponse>(
     router.query.id ? `/api/streams/${router.query.id}` : null
   );
+  const [sendMessage, { loading, data: sendMessageData }] = useMutation(
+    `/api/streams/${router.query.id}/messages`
+  );
+  const onValid = (form: MessageForm) => {
+    if (loading) return;
+    reset();
+    sendMessage(form);
+  };
   const fakeArr = new Array(5).fill(1);
   return (
     <Layout canGoBack title="라이브">
@@ -42,8 +57,12 @@ const StreamsDetail: NextPage = () => {
           </div>
         </div>
         <div className="fixed w-full mx-auto max-w-md bottom-2 inset-x-0">
-          <div className="flex relative items-center">
+          <form
+            onSubmit={handleSubmit(onValid)}
+            className="flex relative items-center"
+          >
             <input
+              {...register("message", { required: true })}
               type="text"
               className="shadow-sm rounded-full w-full pr-12 border-gray-300 focus:ring-orange-500 focus:outline-none focus:border-orange-500"
             />
@@ -52,7 +71,7 @@ const StreamsDetail: NextPage = () => {
                 &rarr;
               </button>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </Layout>
