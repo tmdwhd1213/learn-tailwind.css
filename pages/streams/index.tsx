@@ -1,18 +1,30 @@
 import FloatingButton from "@/components/float-button";
 import Layout from "@/components/layout";
+import { Stream } from "@prisma/client";
 import { NextPage } from "next";
 import Link from "next/link";
+import useSWR from "swr";
+
+interface StreamsResponse {
+  ok: boolean;
+  streams: Stream[];
+}
 
 const Streams: NextPage = () => {
-  const fakeArr = new Array(5).fill(1);
+  const { data } = useSWR<StreamsResponse>(`/api/streams`);
+  console.log(data);
   return (
-    <Layout hasTabBar title="라이브">
+    <Layout hasTabBar title="라이브 커머스">
       <div className=" divide-y-[1px] space-y-4">
-        {fakeArr.map((_, i) => (
-          <Link key={i} href={`/streams/${i}`} className="pt-4 block  px-4">
+        {data?.streams?.map((stream) => (
+          <Link
+            key={stream.id}
+            href={`/streams/${stream.id}`}
+            className="pt-4 block  px-4"
+          >
             <div className="w-full rounded-md shadow-sm bg-slate-300 aspect-video" />
             <h1 className="text-2xl mt-2 font-bold text-gray-900">
-              Galaxy S50
+              {stream.name}
             </h1>
           </Link>
         ))}

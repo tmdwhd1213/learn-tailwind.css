@@ -28,8 +28,8 @@ export default function Layout({
     <div>
       <div
         className={cls(
-          !canGoBack ? "justify-center" : "space-x-4 font-semibold",
-          "bg-white w-full max-w-xl text-lg font-medium px-5 py-3 text-gray-800 border-b fixed top-0 flex items-center"
+          !canGoBack ? "justify-center" : "space-x-4",
+          "font-semibold bg-white w-full max-w-xl text-lg px-5 py-3 text-gray-800 border-b fixed top-0 flex items-center"
         )}
       >
         {undo && (
