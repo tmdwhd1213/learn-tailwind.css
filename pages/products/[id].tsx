@@ -5,6 +5,7 @@ import useUser from "@/libs/client/useUser";
 import { cls, splitWord } from "@/libs/client/utils";
 import { Product, User } from "@prisma/client";
 import type { NextPage } from "next";
+import Image from "next/legacy/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import useSWR, { useSWRConfig } from "swr";
@@ -49,9 +50,31 @@ const ItemDetail: NextPage = () => {
     <Layout canGoBack canGoHome>
       <div className="px-4 py-4">
         <div className="mb-8">
-          <div className="h-96 bg-slate-300" />
+          <div className="relative pb-80">
+            {data ? (
+              <Image
+                src={`https://imagedelivery.net/_1Z9DXKHd556cOnXoC-KAA/${data?.product?.image}/public`}
+                alt="products"
+                className="bg-slate-300 object-center"
+                layout="fill"
+                priority={true}
+              />
+            ) : (
+              <div className="bg-slate-300 object-center" />
+            )}
+          </div>
           <div className="flex cursor-pointer py-3 border-t border-b items-center space-x-3">
-            <div className="w-12 h-12 rounded-full bg-slate-300" />
+            {data ? (
+              <Image
+                alt={`${data?.product?.user?.name}'s avatar`}
+                width={48}
+                height={48}
+                src={`https://imagedelivery.net/_1Z9DXKHd556cOnXoC-KAA/${data?.product?.user?.avatar}/avatar`}
+                className="w-12 h-12 rounded-full bg-slate-300"
+              />
+            ) : (
+              <div className="w-12 h-12 rounded-full bg-slate-300" />
+            )}
             <div>
               <p className="text-sm font-medium text-gray-700">
                 {data?.product?.user?.name}

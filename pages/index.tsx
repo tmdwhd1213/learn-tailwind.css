@@ -2,11 +2,10 @@ import FloatingButton from "@/components/float-button";
 import Item from "@/components/item";
 import Layout from "@/components/layout";
 import { useInfiniteScroll } from "@/libs/client/useInfinityScroll";
-import useUser from "@/libs/client/useUser";
 import { Product } from "@prisma/client";
 import type { NextPage } from "next";
+import Image from "next/image";
 import { useEffect } from "react";
-import useSWR from "swr";
 import useSWRInfinite from "swr/infinite";
 
 export interface ProductwithLikes extends Product {

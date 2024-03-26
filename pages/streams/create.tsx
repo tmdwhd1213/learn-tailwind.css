@@ -53,7 +53,7 @@ const Create: NextPage = () => {
           label="가격"
           placeholder="가격을 입력해주세요."
           name="price"
-          type="number"
+          type="text"
           kind="price"
         />
         <TextArea

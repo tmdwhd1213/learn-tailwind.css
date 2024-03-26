@@ -8,7 +8,7 @@ async function handler(
   res: NextApiResponse<ResponseType>
 ) {
   const {
-    body: { name, price, description },
+    body: { name, price, description, photoId },
     session: { user },
     query: { page },
   } = req;
@@ -42,7 +42,7 @@ async function handler(
           name,
           price: +price,
           description,
-          image: "test",
+          image: photoId,
           user: {
             connect: {
               id: user?.id,

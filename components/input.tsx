@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import type { UseFormRegisterReturn } from "react-hook-form";
 
 interface InputProps {
@@ -19,6 +20,15 @@ export default function Input({
   required,
   ...rest
 }: InputProps) {
+  // const inputRef = useRef<HTMLInputElement>(null);
+  // const formatNumber = () => {
+  //   const number = parseInt(inputRef.current!.value.replace(/,/g, ""));
+  //   if (!isNaN(number)) {
+  //     const formattedNumber = number.toLocaleString();
+  //     inputRef.current!.value = formattedNumber;
+  //   }
+  // };
+
   return (
     <div>
       <label
@@ -47,6 +57,8 @@ export default function Input({
             {...register}
             required={required}
             type={type}
+            // ref={inputRef}
+            // onInput={() => formatNumber()}
             className="pl-7 appearance-none w-full px-3  py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-orange-500 focus:border-orange-500"
           />
           <div className="absolute left-2 pointer-events-none pr-3 flex items-center">
