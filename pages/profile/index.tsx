@@ -1,10 +1,13 @@
 import Layout from "@/components/layout";
 import Link from "next/link";
-import type { NextPage } from "next";
+import type { NextPage, NextPageContext } from "next";
 import useUser from "@/libs/client/useUser";
-import useSWR from "swr";
+import useSWR, { SWRConfig } from "swr";
 import { Review, User } from "@prisma/client";
 import { cls } from "@/libs/client/utils";
+import Image from "next/legacy/image";
+import { withSsrSession } from "@/libs/server/withSession";
+import client from "@/libs/server/client";
 
 interface ReviewsWithUser extends Review {
   createdBy: User;
@@ -19,17 +22,17 @@ const Profile: NextPage = () => {
   const { user } = useUser();
   const { data } = useSWR<ReviewsResponse>(`/api/reviews`);
   return (
-    <Layout canGoBack title="프로필" hasTabBar>
+    <Layout canGoBack title="나의 당근" hasTabBar seoTitle="PROFILE">
       <div className="py-10 px-4">
         <div className="flex items-center space-x-3">
-          {user?.avatar ? (
-            <img
-              src={`https://imagedelivery.net/_1Z9DXKHd556cOnXoC-KAA/${user?.avatar}/avatar`}
-              className="w-16 h-16 bg-slate-500 rounded-full"
-            />
-          ) : (
-            <div className="w-16 h-16 bg-slate-500 rounded-full" />
-          )}
+          <Image
+            width={64}
+            height={64}
+            alt={`${user?.name}'s Avatar`}
+            src={`https://imagedelivery.net/_1Z9DXKHd556cOnXoC-KAA/${user?.avatar}/avatar`}
+            className="bg-slate-500 rounded-full"
+          />
+
           <div className="flex flex-col">
             <span className="font-semibold text-gray-900">{user?.name}</span>
             <Link href="/profile/edit" className="text-sm text-gray-700">
@@ -141,4 +144,32 @@ const Profile: NextPage = () => {
   );
 };
 
-export default Profile;
+const Page: NextPage<{ profile: User }> = ({ profile }) => {
+  return (
+    <SWRConfig
+      value={{
+        fallback: {
+          "/api/users/me": { ok: true, profile },
+        },
+      }}
+    >
+      <Profile />
+    </SWRConfig>
+  );
+};
+
+// SSR에서 authentication 들고오기
+export const getServerSideProps = withSsrSession(
+  async ({ req }: NextPageContext) => {
+    const profile = await client?.user.findUnique({
+      where: { id: req?.session.user?.id },
+    });
+    return {
+      props: {
+        profile: JSON.parse(JSON.stringify(profile)),
+      },
+    };
+  }
+);
+
+export default Page;

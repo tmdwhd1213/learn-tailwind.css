@@ -26,11 +26,11 @@ export default function Layout({
 }: LayoutProps) {
   const { back, pathname } = useRouter();
   const goBackHandler = () => back();
-
+  const titleMsg = `${seoTitle} | Carrot Market`;
   return (
     <div>
       <Head>
-        <title>{seoTitle} | Carrot Market</title>
+        <title>{titleMsg}</title>
       </Head>
       <div
         className={cls(

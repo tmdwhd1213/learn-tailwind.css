@@ -50,6 +50,7 @@ const Home: NextPage = () => {
           <Item
             id={product.id}
             key={product.id}
+            image={product.image}
             title={product.name}
             price={product.price}
             comments={1}
@@ -81,13 +82,12 @@ const Home: NextPage = () => {
 // export default Home;
 
 const Page: NextPage<{ products: ProductwithLikes[] }> = ({ products }) => {
-  const { query } = useRouter();
   return (
     <SWRConfig
       value={{
         // fallback: 캐시 초기값을 설정할 수 있다.
         fallback: {
-          [`/api/products/${query.id}`]: {
+          [`/api/products`]: {
             ok: true,
             products,
           },
