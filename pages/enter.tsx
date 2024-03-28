@@ -1,10 +1,15 @@
+import Bs from "@/components/bs";
 import Button from "@/components/button";
 import Input from "@/components/input";
 import useMutation from "@/libs/client/useMutation";
 import { cls } from "@/libs/client/utils";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import Skeleton from "react-loading-skeleton";
+
+// const Bs = dynamic(import("@/components/bs")); // 앱을 다 만들고나서 최적화할 때 사용
 
 interface EnterForm {
   email?: string;
@@ -25,7 +30,6 @@ export default function Enter() {
     useMutation<MutationResult>("/api/users/enter");
   const [confirmToken, { loading: tokenLoading, data: tokenData }] =
     useMutation<MutationResult>("/api/users/confirm");
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { register, watch, reset, handleSubmit } = useForm<EnterForm>();
   const { register: tokenRegister, handleSubmit: tokenHandleSubmit } =
@@ -119,14 +123,19 @@ export default function Enter() {
                 />
               )}
               {method === "phone" && (
-                <Input
-                  register={register("phone")}
-                  name="phone"
-                  label="Phone number"
-                  type="tel"
-                  kind="phone"
-                  required
-                />
+                <>
+                  <Suspense fallback={"Loading..."}>
+                    <Bs />
+                  </Suspense>
+                  <Input
+                    register={register("phone")}
+                    name="phone"
+                    label="Phone number"
+                    type="tel"
+                    kind="phone"
+                    required
+                  />
+                </>
               )}
               {method === "email" && (
                 <Button text={isSubmitting ? "Loading..." : "Get login link"} />

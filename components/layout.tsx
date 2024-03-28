@@ -1,4 +1,5 @@
 import { cls } from "@/libs/client/utils";
+import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
@@ -11,6 +12,7 @@ interface LayoutProps {
   undo?: boolean;
   children: React.ReactNode;
   addClassName?: string;
+  seoTitle: string;
 }
 
 export default function Layout({
@@ -20,12 +22,16 @@ export default function Layout({
   undo,
   hasTabBar,
   children,
+  seoTitle,
 }: LayoutProps) {
   const { back, pathname } = useRouter();
   const goBackHandler = () => back();
 
   return (
     <div>
+      <Head>
+        <title>{seoTitle} | Carrot Market</title>
+      </Head>
       <div
         className={cls(
           !canGoBack ? "justify-center" : "space-x-4",

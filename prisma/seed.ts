@@ -9,6 +9,9 @@ async function main() {
         name: String(item),
         description: String(item),
         price: item,
+        cloudflareId: "",
+        cloudflareKey: "",
+        cloudflareUrl: "",
         user: {
           connect: {
             id: 15,
