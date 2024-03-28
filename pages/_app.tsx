@@ -6,6 +6,7 @@ import { SWRConfig } from "swr";
 
 export default function App({ Component, pageProps }: AppProps) {
   console.log("APP is RUNNING!");
+
   return (
     <SWRConfig
       value={{ fetcher: (url: string) => fetch(url).then((res) => res.json()) }}
@@ -14,10 +15,10 @@ export default function App({ Component, pageProps }: AppProps) {
         <CheckedLogin />
         <Component {...pageProps} />
       </div>
-      <Script
+      {/* <Script
         src="https://developers.kakao.com/sdk/js/kakao.js"
         strategy="lazyOnload"
-      />
+      /> */}
       {/* 외부 자바스크립트 파일 불러다 쓸 때 좋음 */}
       <Script
         src="https://connect.facebook.net/en_US/sdk.js"
