@@ -5,7 +5,7 @@ import Link from "next/link";
 const Chats: NextPage = () => {
   const fakeArr = Array.from({ length: 5 }, (_, k) => k + 1);
   return (
-    <Layout title="채팅" hasTabBar>
+    <Layout title="채팅" seoTitle="Chat" hasTabBar>
       <div className="py-10 divide-y-[1px]">
         {fakeArr.map((_, i) => (
           <Link

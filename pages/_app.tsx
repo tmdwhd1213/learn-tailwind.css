@@ -20,7 +20,7 @@ export default function App({ Component, pageProps }: AppProps) {
         strategy="lazyOnload"
       /> */}
       {/* 외부 자바스크립트 파일 불러다 쓸 때 좋음 */}
-      <Script
+      {/* <Script
         src="https://connect.facebook.net/en_US/sdk.js"
         onLoad={() => {
           window.fbAsyncInit = function () {
@@ -32,7 +32,7 @@ export default function App({ Component, pageProps }: AppProps) {
             });
           };
         }}
-      />
+      /> */}
     </SWRConfig>
   );
 }

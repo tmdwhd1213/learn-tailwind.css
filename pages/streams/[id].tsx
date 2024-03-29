@@ -72,7 +72,7 @@ const StreamsDetail: NextPage = () => {
   });
 
   return (
-    <Layout canGoBack title="라이브 커머스">
+    <Layout seoTitle="STREAMING" canGoBack title="라이브 커머스">
       <div className="py-10 px-4  space-y-4">
         <div className="mt-5">
           <h1 className="text-3xl font-bold text-gray-900">

@@ -121,3 +121,15 @@ npx prisma db seed
   Remote Image(URL_API)로 보낼 때: 
     1. Next.js는 URL의 Host_name을 알고싶어함. -> next.config.js에 images: { domains: ["imagedelivery.net"] } 을 추가해줌.
     2. width, height OR layout='fill' 프로퍼티를 전달해줘야함. (lazy loading을 지원하기 위한 정보 제공)
+
+# SSG (Static Site Generator)
+  정적 페이지 (javascript는 없고 html + css 만 있는)
+  Next.js 12버전 (getStaticProps)
+  왜 사용하는지?
+    - 데이터를 공개적으로 캐시할 수 있음
+    - 페이지는 SEO를 위해 미리 렌더링되어야 하고 매우 빨라야 함.
+    - 성능을 위해 CDN에서 캐시할 수 있는 HTML 및 JSON 파일을 생성.
+
+# getStaticPaths() 
+  -> getStaticProps를 쓰는 페이지에 동적 URL ([slug].tsx 같은)
+    이 있는 곳에서 필요함. (미리 몇개의 페이지를 생성할 것인지 알려줘야 함.)

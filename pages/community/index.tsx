@@ -32,7 +32,7 @@ const Community: NextPage = () => {
       : null
   );
   return (
-    <Layout title="동네생활" hasTabBar>
+    <Layout seoTitle="COMMUNITY" title="동네생활" hasTabBar>
       <div className="py-16 px-4 space-y-8">
         {data?.posts?.map((post) => (
           <Link
